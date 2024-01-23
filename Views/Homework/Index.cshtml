@@ -2,70 +2,41 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>作業</h1>
-<div id="ul1" class="card card-row" style="width: 18rem;"></div>
 
+<head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="~/css/styles.css" />
+</head>
+
+<div id="data" class="d-flex flex-wrap justify-content-around " ></div>
 
 @section Scripts {
     <script src="~/js/travel.js"></script>
+
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            try {
-                const ul1 = document.getElementById('ul1');
+        const dataContainer = document.querySelector('#data');
+        const emps = spots.CommonFormat.Section;
 
-                if (!spots || !spots.CommonFormat || !spots.CommonFormat.Section) {
-                    throw new Error('Invalid data structure');
-                }
+        const htmlContent = emps.map((data) => {
+            const { CAT2, xbody, avBegin, address, file } = data;
 
-                var spotsData = spots.CommonFormat.Section;
+            const imageUrl = file && file.img && file.img.length > 0 ? file.img[0].text : '';
 
-                spotsData.forEach(function (spot, index) {
-                    // Check if it's the first card in a new row
-                    if (index % 4 === 0) {
-                        var row = document.createElement('div');
-                        row.className = 'card-row';
-                        ul1.appendChild(row);
-                    }
+            return (
+                `<div class="card mb-3" style="width: 18rem;">
+                    <img src="${imageUrl}" class="card-img-top" alt="${CAT2}" style="width: 100%; height: 100%; object-fit: cover;">
+                    <div class="card-body">
+                            <h5 class="card-title">${CAT2}</h5>
+                    <p class="card-text">${xbody.length > 60 ? xbody.slice(0, 60) + '...' : xbody}</p>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">${avBegin}</li>
+                        <li class="list-group-item">${address}</li>
+                    </ul>
+                </div>`
+            );
+        }).join('');
 
-                    // Create a card
-                    var card = document.createElement('div');
-                    card.className = 'card';
-                    card.style.width = '18rem';
-                    card.style.marginBottom = '20px';
-
-                    if (spot.file != null && spot.file.img != null && spot.file.img.length > 0) {
-                        var img = document.createElement('img');
-                        img.src = spot.file.img[0].text;
-                        img.className = 'card-img-top';
-                        img.alt = spot.file.img[0]['@@description'];
-                        card.appendChild(img);
-                    }
-
-                    var cardBody = document.createElement('div');
-                    cardBody.className = 'card-body';
-                    cardBody.innerHTML = '<h5 class="card-title">' + spot.stitle + '</h5>' +
-                        '<p class="card-text">' + spot.xbody + '</p>';
-                    card.appendChild(cardBody);
-
-                    var listGroup = document.createElement('ul');
-                    listGroup.className = 'list-group list-group-flush';
-                    listGroup.innerHTML = '<li class="list-group-item">' + spot.address + '</li>' +
-                        '<li class="list-group-item">' + spot.xpostDate + '</li>';
-                    card.appendChild(listGroup);
-
-                    var cardFooter = document.createElement('div');
-                    cardFooter.className = 'card-body';
-                    cardFooter.innerHTML = '<a href="#" class="card-link">' + spot.idpt + '</a>';
-                    card.appendChild(cardFooter);
-
-                    // Append the card to the current row
-                    var currentRow = ul1.lastElementChild;
-                    currentRow.appendChild(card);
-                });
-            } catch (error) {
-                console.error(error.message);
-            }
-        });
-
+        dataContainer.innerHTML = htmlContent;
     </script>
 }
