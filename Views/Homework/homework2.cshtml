@@ -1,0 +1,209 @@
+﻿@model IEnumerable<Fuen31Site.Models.Member>
+
+@{
+    ViewData["Title"] = "homework2";
+}
+
+<head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="~/css/styles.css" />
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"
+          integrity="sha384-DyZ98zCjOnJFMmUN6/BkzZ5nFOsHbThU6IKJR2fGJvF7F0s4xK/6f/ThpT1fvWb4"
+          crossorigin="anonymous">
+    <style>
+        body {
+            background-image: url('https://images.unsplash.com/photo-1516528387618-afa90b13e000?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat; }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #ffff; 
+        }
+
+        .h2f {
+            font-weight: 800;
+        }
+
+        .bck {
+            width: 100%;
+            height: 100vh; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .custom-btn {
+            background-color: #43714E; 
+            color: #ffffff; /* 按鈕文字顏色 */
+            border-color: #43714E;
+        }
+
+            .custom-btn:hover {
+                background-color: #68834C;
+                color: #ffffff;
+                border-color: #68834C; 
+            }
+    </style>
+</head>
+<div class="bck">
+    <div class="container">
+        
+        <div class="row justify-content-center">
+          
+            <div class="col-md-6">
+                    <div class="header-container">
+                        <h2 class="h2f" style="color:#ffff; font-weight:800;">註冊帳號</h2>
+                        <h5 class="h5f">Welcome to join us</h5>
+                    </div>
+                <div class="card">
+                    <div class="card-body">
+                   
+               
+                        <form id="userForm">
+                       
+                            <div class="mb-3">
+                                <label for="userName" class="form-label">姓名：</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                    <input type="text" class="form-control" id="userName" name="Name" required>
+                                </div>
+                                    <div id="validationResult" class="alert alert-warning mt-3" style="display: none;">帳號已存在</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="UserEmail" class="form-label">電子郵件：</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                    <input type="email" class="form-control" id="UserEmail" name="Email" required>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="userAge" class="form-label">年紀：</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-birthday-cake"></i></span>
+                                    <input type="number" class="form-control" id="userAge" name="Age" required>
+                                </div>
+                            </div>
+                                <div class="d-flex justify-content-center">
+                                    <button id="button1" type="submit" class="btn custom-btn">送出</button>
+                                </div>
+                        </form>
+                        <div class="alert alert-warning mt-3" id="validationResult" style="display: none;"></div>
+                        <div class="alert alert-success mt-3" id="submissionResult" style="display: none;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            const txtName = $('#userName');
+            const txtAge = $('#userAge');
+            const txtMail = $('#UserEmail');
+            const validationResult = $('#validationResult');
+            const submissionResult = $('#submissionResult');
+            const form = $('#userForm');
+
+            // 防抖函數
+            function debounce(func, wait, immediate) {
+                var timeout;
+                return function () {
+                    var context = this, args = arguments;
+                    clearTimeout(timeout);
+                    timeout = setTimeout(function () {
+                        timeout = null;
+                        if (!immediate) func.apply(context, args);
+                    }, wait);
+                    if (immediate && !timeout) func.apply(context, args);
+                };
+            };
+
+            // 即時驗證
+            txtName.on('input', debounce(function () {
+                let name = txtName.val().trim();
+                if (name) {
+                    fetch('@Url.Action("CheckAccount", "Homework")', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ name: name })
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            validationResult.show();
+                            validationResult.text(data.message);
+                            if (data.success) {
+                                validationResult.removeClass('alert-warning').addClass('alert-success');
+                                txtName.removeClass('is-invalid').addClass('is-valid');
+                            } else {
+                                validationResult.removeClass('alert-success').addClass('alert-warning');
+                                txtName.removeClass('is-valid').addClass('is-invalid');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            validationResult.hide();
+                        });
+                } else {
+                    validationResult.hide();
+                    txtName.removeClass('is-invalid is-valid');
+                }
+            }, 500));
+
+            // 表單提交
+            form.on('submit', async function (event) {
+                event.preventDefault();
+
+                let userData = {
+                    name: txtName.val().trim(),
+                    Age: parseInt(txtAge.val(), 10),
+                    Email: txtMail.val().trim()
+                };
+
+
+                // 這裡是發送AJAX POST請求進行帳號驗證~
+                let response = await fetch('@Url.Action("CheckAccount", "Homework")', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(userData)
+                });
+
+                let data = await response.json();
+
+                if (data.success) {
+                    // 這裡是當帳號可以使用，發送保存的請求~
+                    let saveResponse = await fetch('@Url.Action("SaveAccount", "Homework")', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(userData)
+                    });
+
+                    let saveData = await saveResponse.json();
+
+                    if (saveData.success) {
+                        swal("帳號建立成功！", "您的帳號已成功建立。", "success");
+                        submissionResult.show();
+                        submissionResult.text(`Hello ${userData.name}, ${userData.Age}歲，電子郵件是 ${userData.Email}.`);
+                    } else {
+                        swal("保存錯誤！", "無法保存帳號信息。", "error");
+                    }
+                } else {
+                    swal("帳號已存在！", "請嘗試使用另一個帳號名稱。", "error");
+                }
+            });
+        });
+    </script>
+}

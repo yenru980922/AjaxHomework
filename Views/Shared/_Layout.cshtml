@@ -7,6 +7,27 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Fuen31Site.styles.css" asp-append-version="true" />
+    <!-- Google font-->
+    <link href="https://fonts.googleapis.com/css?family=Rubik:400,400i,500,500i,700,700i&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i,700,700i,900&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="~/Content/css/font-awesome.css">
+    <!-- ico-font-->
+    <link rel="stylesheet" type="text/css" href="~/Content/css/vendors/icofont.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
+    <!-- Themify icon-->
+    <link rel="stylesheet" type="text/css" href="~/Content/css/vendors/themify.css">
+    <!-- Flag icon-->
+    <link rel="stylesheet" type="text/css" href="~/Content/css/vendors/flag-icon.css">
+    <!-- Feather icon-->
+    <link rel="stylesheet" type="text/css" href="~/Content/css/vendors/feather-icon.css">
+    <!-- Plugins css start-->
+    <link rel="stylesheet" type="text/css" href="~/Content/css/vendors/slick.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/css/vendors/slick-theme.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/css/vendors/scrollbar.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/css/vendors/animate.css">
+    @await RenderSectionAsync("Styles", required: false)
 </head>
 <body>
    
@@ -22,11 +43,17 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Homework" asp-action="Index">Homework</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Homework" asp-action="Index">Homework1</a>
                         </li>
+
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Homework" asp-action="homework2">Homework2</a>
                         </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Spots">Spots</a>
+                        </li>
+
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
@@ -47,9 +74,27 @@
             &copy; 2024 - Fuen31Site - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
+
+    <!-- latest jquery-->
+    <script src="~/Scripts/js/jquery.min.js"></script>
+    <!-- Bootstrap js-->
+    <script src="~/Scripts/js/bootstrap/bootstrap.bundle.min.js"></script>
+    <!-- feather icon js-->
+    <script src="~/Scripts/js/icons/feather-icon/feather.min.js"></script>
+    <script src="~/Scripts/js/icons/feather-icon/feather-icon.js"></script>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/Scripts/js/dashboard/default.js"></script>
+    <script src="~/Scripts/js/notify/index.js"></script>
+    <script src="~/Scripts/js/typeahead/handlebars.js"></script>
+    <script src="~/Scripts/js/typeahead/typeahead.bundle.js"></script>
+    <script src="~/Scripts/js/typeahead/typeahead.custom.js"></script>
+    <script src="~/Scripts/js/typeahead-search/handlebars.js"></script>
+    <script src="~/Scripts/js/typeahead-search/typeahead-custom.js"></script>
+    <script src="~/Scripts/js/height-equal.js"></script>
+    <script src="~/Scripts/js/animation/wow/wow.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
