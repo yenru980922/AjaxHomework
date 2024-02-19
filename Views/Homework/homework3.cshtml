@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<Fuen31Site.Models.Member>
 
 @{
-    ViewData["Title"] = "homework2";
+    ViewData["Title"] = "homework3";
 }
 
 <head>
@@ -16,13 +16,14 @@
             background-image: url('https://images.unsplash.com/photo-1516528387618-afa90b13e000?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
             background-size: cover;
             background-position: center;
-            background-repeat: no-repeat; }
+            background-repeat: no-repeat;
+        }
 
         .header-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            color: #ffff; 
+            color: #ffff;
         }
 
         .h2f {
@@ -31,48 +32,79 @@
 
         .bck {
             width: 100%;
-            height: 100vh; 
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
         .custom-btn {
-            background-color: #43714E; 
-            color: #ffffff; /* 按鈕文字顏色 */
-            border-color: #43714E;
+            background-color: #43714E;
+            color: #ffffff;
+            / 按鈕文字顏色 / border-color: #43714E;
         }
 
             .custom-btn:hover {
                 background-color: #68834C;
                 color: #ffffff;
-                border-color: #68834C; 
+                border-color: #68834C;
             }
+
+        .avatar-preview {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin: auto;
+            background-color: #cccccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .upload-prompt {
+            text-align: center;
+            font-size: 12px;
+            color: #777;
+            margin-top: 5px;
+        }
+
     </style>
 </head>
 <div class="bck">
     <div class="container">
-        
+
         <div class="row justify-content-center">
-          
+
             <div class="col-md-6">
-                    <div class="header-container">
-                    <h2 class="h2f" style="color:#ffff; font-weight:800;">檢查帳號是否存在</h2>
-                        <h5 class="h5f">Homework2</h5>
-                    </div>
+                <div class="header-container">
+                    <h2 class="h2f" style="color:#ffff; font-weight:800;">註冊帳號</h2>
+                    <h5 class="h5f">Welcome to join us</h5>
+                </div>
                 <div class="card">
                     <div class="card-body">
-                   
-               
+
+
                         <form id="userForm">
-                       
+
+                            @* 上傳頭像 *@
+                            <div style="margin-top:30px">
+                            <input class="form-control" type="file" id="formFile" name="avatar" accept="image/*" style="display: none;">
+                            <div class="avatar-preview" id="avatarContainer" style="width: 100px; height: 100px; border-radius: 50%; overflow: hidden; margin: auto; background-color: #cccccc; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+                                <i class="fas fa-user-circle" style="font-size: 50px; color: #777777;"></i>
+                                <img id="avatarPreview" src="" alt="頭像預覽" style="display: none; width: 100%; height: 100%; object-fit: cover;">
+                            </div>
+                            <p class="upload-prompt" style="text-align: center; font-size: 12px; color: #777; margin-top: 5px;">請上傳頭像</p>
+                            </div>
+
                             <div class="mb-3">
                                 <label for="userName" class="form-label">姓名：</label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fas fa-user"></i></span>
                                     <input type="text" class="form-control" id="userName" name="Name" required>
                                 </div>
-                                    <div id="validationResult" class="alert alert-warning mt-3" style="display: none;">帳號已存在</div>
+                                <div id="validationResult" class="alert alert-warning mt-3" style="display: none;">帳號已存在</div>
                             </div>
                             <div class="mb-3">
                                 <label for="UserEmail" class="form-label">電子郵件：</label>
@@ -82,15 +114,28 @@
                                 </div>
                             </div>
                             <div class="mb-3">
+                                <label for="Password" class="form-label">密碼：</label>
+                                <input type="password" class="form-control" id="Password" name="Password" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="ConfirmPassword" class="form-label">密碼確認：</label>
+                                <input type="password" class="form-control" id="ConfirmPassword" name="ConfirmPassword" required>
+
+                            </div>
+
+                            <div class="mb-3">
                                 <label for="userAge" class="form-label">年紀：</label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fas fa-birthday-cake"></i></span>
                                     <input type="number" class="form-control" id="userAge" name="Age" required>
                                 </div>
                             </div>
-                                <div class="d-flex justify-content-center">
-                                    <button id="button1" type="submit" class="btn custom-btn">送出</button>
-                                </div>
+
+
+
+                            <div class="d-flex justify-content-center" style="margin-top:30px; margin-bottom:30px">
+                                <button id="button1" type="submit" class="btn custom-btn">送出</button>
+                            </div>
                         </form>
                         <div class="alert alert-warning mt-3" id="validationResult" style="display: none;"></div>
                         <div class="alert alert-success mt-3" id="submissionResult" style="display: none;"></div>
@@ -112,7 +157,25 @@
             const submissionResult = $('#submissionResult');
             const form = $('#userForm');
 
-            // 防抖函數
+            // 點擊頭像能上傳檔案
+            $('#avatarContainer').on('click', function () {
+                $('#formFile').click();
+            });
+
+            // 預覽圖片
+            $('#formFile').on('change', function (event) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#avatarPreview').attr('src', e.target.result).show(); // 顯示選擇的圖片
+
+                    // 隱藏預設圖片
+                    $('.fas.fa-user-circle').hide(); 
+                }
+                reader.readAsDataURL(event.target.files[0]);
+            });
+
+
+            // 防抖函數   ###重點筆記: 這裡我自己以後能適當運用"防抖函數"，去避免在用戶每次輸入時都發送請求，可能導致過多的後端請求!!
             function debounce(func, wait, immediate) {
                 var timeout;
                 return function () {
@@ -126,7 +189,7 @@
                 };
             };
 
-            // 即時驗證
+            //即時驗證   ###重點筆記: 能即時驗證客戶在辦理帳號時，輸入名字就馬上即時顯示此名稱是否用過!!
             txtName.on('input', debounce(function () {
                 let name = txtName.val().trim();
                 if (name) {
